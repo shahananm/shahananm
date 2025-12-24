@@ -672,3 +672,44 @@ if (cursor && cursorFollower && !isTouchDevice) {
 }
 
 console.log('✨ Custom cursor initialized!');
+
+// ==========================================
+// Touch Ripple Effect for Mobile
+// ==========================================
+const isTouchDeviceCheck = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+if (isTouchDeviceCheck) {
+    // Create touch ripple on tap
+    document.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        createTouchRipple(touch.clientX, touch.clientY);
+    }, { passive: true });
+
+    function createTouchRipple(x, y) {
+        const ripple = document.createElement('div');
+        ripple.className = 'touch-ripple';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        document.body.appendChild(ripple);
+
+        // Remove ripple after animation
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    }
+
+    // Add haptic-style feedback to interactive elements
+    const touchElements = document.querySelectorAll('a, button, .btn, .service-card, .project-card, .faq-question, .slider-arrow, .slider-dot, .social-link');
+
+    touchElements.forEach(el => {
+        el.addEventListener('touchstart', function () {
+            this.style.transition = 'transform 0.1s ease';
+        }, { passive: true });
+
+        el.addEventListener('touchend', function () {
+            this.style.transition = 'transform 0.3s ease';
+        }, { passive: true });
+    });
+
+    console.log('📱 Touch effects initialized!');
+}
