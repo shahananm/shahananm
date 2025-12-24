@@ -699,7 +699,7 @@ if (isTouchDeviceCheck) {
     }
 
     // Add haptic-style feedback to interactive elements
-    const touchElements = document.querySelectorAll('a, button, .btn, .service-card, .project-card, .faq-question, .slider-arrow, .slider-dot, .social-link');
+    const touchElements = document.querySelectorAll('a, button, .btn, .service-card, .project-card, .faq-question, .slider-arrow, .slider-dot, .social-link, .testimonial-arrow, .testimonial-dot');
 
     touchElements.forEach(el => {
         el.addEventListener('touchstart', function () {
@@ -713,3 +713,139 @@ if (isTouchDeviceCheck) {
 
     console.log('📱 Touch effects initialized!');
 }
+
+// ==========================================
+// Testimonial Slider
+// ==========================================
+const testimonialTrack = document.getElementById('testimonialTrack');
+const testimonialPrev = document.getElementById('testimonialPrev');
+const testimonialNext = document.getElementById('testimonialNext');
+const testimonialDots = document.getElementById('testimonialDots');
+const testimonialSlides = document.querySelectorAll('.testimonial-slide');
+
+let currentTestimonial = 0;
+let testimonialAutoSlide;
+
+// Create testimonial dots
+function createTestimonialDots() {
+    if (!testimonialDots) return;
+    testimonialDots.innerHTML = '';
+
+    for (let i = 0; i < testimonialSlides.length; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('testimonial-dot');
+        if (i === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => goToTestimonial(i));
+        testimonialDots.appendChild(dot);
+    }
+}
+
+// Update testimonial dots
+function updateTestimonialDots() {
+    if (!testimonialDots) return;
+    const dots = testimonialDots.querySelectorAll('.testimonial-dot');
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentTestimonial);
+    });
+}
+
+// Go to specific testimonial
+function goToTestimonial(index) {
+    currentTestimonial = index;
+    if (currentTestimonial < 0) currentTestimonial = testimonialSlides.length - 1;
+    if (currentTestimonial >= testimonialSlides.length) currentTestimonial = 0;
+    updateTestimonialSlider();
+}
+
+// Update testimonial slider position
+function updateTestimonialSlider() {
+    if (!testimonialTrack) return;
+    const offset = currentTestimonial * 100;
+    testimonialTrack.style.transform = `translateX(-${offset}%)`;
+    updateTestimonialDots();
+}
+
+// Next testimonial
+function nextTestimonial() {
+    currentTestimonial++;
+    if (currentTestimonial >= testimonialSlides.length) currentTestimonial = 0;
+    updateTestimonialSlider();
+}
+
+// Previous testimonial
+function prevTestimonial() {
+    currentTestimonial--;
+    if (currentTestimonial < 0) currentTestimonial = testimonialSlides.length - 1;
+    updateTestimonialSlider();
+}
+
+// Auto slide testimonials
+function startTestimonialAutoSlide() {
+    testimonialAutoSlide = setInterval(() => {
+        nextTestimonial();
+    }, 6000);
+}
+
+function stopTestimonialAutoSlide() {
+    clearInterval(testimonialAutoSlide);
+}
+
+// Event listeners for testimonial slider
+if (testimonialPrev && testimonialNext) {
+    testimonialPrev.addEventListener('click', () => {
+        prevTestimonial();
+        stopTestimonialAutoSlide();
+        startTestimonialAutoSlide();
+    });
+
+    testimonialNext.addEventListener('click', () => {
+        nextTestimonial();
+        stopTestimonialAutoSlide();
+        startTestimonialAutoSlide();
+    });
+}
+
+// Touch/Swipe support for testimonials
+let testimonialTouchStartX = 0;
+let testimonialTouchEndX = 0;
+
+const testimonialSlider = document.getElementById('testimonialSlider');
+
+if (testimonialSlider) {
+    testimonialSlider.addEventListener('touchstart', (e) => {
+        testimonialTouchStartX = e.changedTouches[0].screenX;
+        stopTestimonialAutoSlide();
+    }, { passive: true });
+
+    testimonialSlider.addEventListener('touchend', (e) => {
+        testimonialTouchEndX = e.changedTouches[0].screenX;
+        handleTestimonialSwipe();
+        startTestimonialAutoSlide();
+    }, { passive: true });
+}
+
+function handleTestimonialSwipe() {
+    const swipeThreshold = 50;
+    const diff = testimonialTouchStartX - testimonialTouchEndX;
+
+    if (diff > swipeThreshold) {
+        nextTestimonial();
+    } else if (diff < -swipeThreshold) {
+        prevTestimonial();
+    }
+}
+
+// Initialize testimonial slider
+if (testimonialTrack && testimonialSlides.length > 0) {
+    createTestimonialDots();
+    updateTestimonialSlider();
+    startTestimonialAutoSlide();
+
+    // Pause on hover
+    if (testimonialSlider) {
+        testimonialSlider.addEventListener('mouseenter', stopTestimonialAutoSlide);
+        testimonialSlider.addEventListener('mouseleave', startTestimonialAutoSlide);
+    }
+}
+
+console.log('💬 Testimonial slider initialized!');
