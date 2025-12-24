@@ -431,8 +431,22 @@ function updateSlider() {
     sliderTrack.style.transform = `translateX(-${offset}%)`;
 
     // Update slide widths
-    slides.forEach(slide => {
+    slides.forEach((slide, index) => {
         slide.style.minWidth = `${slideWidth}%`;
+
+        // Remove all position classes
+        slide.classList.remove('active', 'prev', 'next');
+
+        // Add position classes for 3D carousel effect
+        const centerSlide = currentSlide + Math.floor(slidesPerView / 2);
+
+        if (index === centerSlide || (slidesPerView === 1 && index === currentSlide)) {
+            slide.classList.add('active');
+        } else if (index === centerSlide - 1 || (slidesPerView === 1 && index === currentSlide - 1)) {
+            slide.classList.add('prev');
+        } else if (index === centerSlide + 1 || (slidesPerView === 1 && index === currentSlide + 1)) {
+            slide.classList.add('next');
+        }
     });
 
     updateDots();
