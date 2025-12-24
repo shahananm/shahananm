@@ -577,3 +577,84 @@ if (sliderTrack && slides.length > 0) {
     projectsSlider.addEventListener('mouseleave', startAutoSlide);
 }
 
+// ==========================================
+// Custom Cursor
+// ==========================================
+const cursor = document.getElementById('cursor');
+const cursorFollower = document.getElementById('cursor-follower');
+
+// Check if we're on a touch device
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+if (cursor && cursorFollower && !isTouchDevice) {
+    let mouseX = 0;
+    let mouseY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
+    let followerX = 0;
+    let followerY = 0;
+
+    // Update mouse position
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    // Smooth cursor animation
+    function animateCursor() {
+        // Main cursor - faster follow
+        cursorX += (mouseX - cursorX) * 0.2;
+        cursorY += (mouseY - cursorY) * 0.2;
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+
+        // Follower - slower follow for nice trailing effect
+        followerX += (mouseX - followerX) * 0.1;
+        followerY += (mouseY - followerY) * 0.1;
+        cursorFollower.style.left = followerX + 'px';
+        cursorFollower.style.top = followerY + 'px';
+
+        requestAnimationFrame(animateCursor);
+    }
+
+    animateCursor();
+
+    // Hover effects for interactive elements
+    const interactiveElements = document.querySelectorAll('a, button, .btn, .nav-link, .social-link, .service-card, .project-card, .faq-question, .slider-arrow, .slider-dot, input, textarea');
+
+    interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursor.classList.add('hover');
+            cursorFollower.classList.add('hover');
+        });
+
+        el.addEventListener('mouseleave', () => {
+            cursor.classList.remove('hover');
+            cursorFollower.classList.remove('hover');
+        });
+    });
+
+    // Click effect
+    document.addEventListener('mousedown', () => {
+        cursor.classList.add('click');
+        cursorFollower.classList.add('click');
+    });
+
+    document.addEventListener('mouseup', () => {
+        cursor.classList.remove('click');
+        cursorFollower.classList.remove('click');
+    });
+
+    // Hide cursor when leaving window
+    document.addEventListener('mouseleave', () => {
+        cursor.style.opacity = '0';
+        cursorFollower.style.opacity = '0';
+    });
+
+    document.addEventListener('mouseenter', () => {
+        cursor.style.opacity = '1';
+        cursorFollower.style.opacity = '1';
+    });
+}
+
+console.log('✨ Custom cursor initialized!');

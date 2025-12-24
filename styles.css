@@ -43,6 +43,81 @@ body {
     color: var(--text-light);
     line-height: 1.7;
     overflow-x: hidden;
+    cursor: none;
+}
+
+/* ==========================================
+   Custom Cursor
+   ========================================== */
+.cursor {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+    mix-blend-mode: difference;
+}
+
+.cursor-follower {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+
+.cursor.hover {
+    width: 20px;
+    height: 20px;
+    background: var(--primary-light);
+}
+
+.cursor-follower.hover {
+    width: 60px;
+    height: 60px;
+    border-color: var(--primary-light);
+    background: rgba(201, 169, 98, 0.1);
+}
+
+.cursor.click {
+    transform: translate(-50%, -50%) scale(0.8);
+}
+
+.cursor-follower.click {
+    transform: translate(-50%, -50%) scale(0.8);
+}
+
+/* Hide custom cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+
+    .cursor,
+    .cursor-follower {
+        display: none;
+    }
+
+    body {
+        cursor: auto;
+    }
+}
+
+/* Cursor on links and buttons */
+a,
+button,
+.btn,
+.nav-link,
+.social-link,
+.service-card,
+.project-card,
+.faq-question {
+    cursor: none;
 }
 
 a {
