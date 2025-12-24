@@ -893,6 +893,172 @@ section {
 }
 
 /* ==========================================
+   Why Choose Me Section
+   ========================================== */
+.why-choose-me {
+    background: var(--bg-darker);
+    padding: 120px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.why-choose-me::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 10% 20%, rgba(201, 169, 98, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(201, 169, 98, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.why-card {
+    background: var(--bg-card);
+    border-radius: 20px;
+    padding: 40px 30px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.why-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s ease;
+}
+
+.why-card:hover::before {
+    transform: scaleX(1);
+}
+
+.why-card:hover {
+    transform: translateY(-10px);
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 30px rgba(201, 169, 98, 0.1);
+    border-color: rgba(201, 169, 98, 0.2);
+}
+
+.why-icon {
+    width: 70px;
+    height: 70px;
+    background: rgba(201, 169, 98, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    transition: all 0.4s ease;
+    position: relative;
+}
+
+.why-icon::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background: linear-gradient(135deg, var(--primary-color), transparent) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.why-card:hover .why-icon::after {
+    opacity: 1;
+}
+
+.why-icon i {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    transition: all 0.4s ease;
+}
+
+.why-card:hover .why-icon {
+    background: var(--gradient-gold);
+    transform: scale(1.1) rotate(5deg);
+}
+
+.why-card:hover .why-icon i {
+    color: var(--bg-dark);
+}
+
+.why-number {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 700;
+    color: rgba(201, 169, 98, 0.1);
+    line-height: 1;
+    transition: all 0.4s ease;
+}
+
+.why-card:hover .why-number {
+    color: rgba(201, 169, 98, 0.25);
+    transform: scale(1.1);
+}
+
+.why-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--text-light);
+    transition: color 0.4s ease;
+}
+
+.why-card:hover h3 {
+    color: var(--primary-color);
+}
+
+.why-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .why-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .why-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .why-card {
+        padding: 30px 25px;
+    }
+}
+
+/* ==========================================
    Projects Section - 3D Card Carousel
    ========================================== */
 .projects {
