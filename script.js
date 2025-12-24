@@ -354,3 +354,226 @@ window.addEventListener('load', () => {
 });
 
 console.log('🚀 Portfolio website loaded successfully!');
+
+// ==========================================
+// Projects Slider
+// ==========================================
+const sliderTrack = document.getElementById('sliderTrack');
+const sliderPrev = document.getElementById('sliderPrev');
+const sliderNext = document.getElementById('sliderNext');
+const sliderDots = document.getElementById('sliderDots');
+const slides = document.querySelectorAll('.slide');
+
+let currentSlide = 0;
+let slidesPerView = 3;
+let autoSlideInterval;
+
+// Calculate slides per view based on screen width
+function updateSlidesPerView() {
+    if (window.innerWidth <= 576) {
+        slidesPerView = 1;
+    } else if (window.innerWidth <= 992) {
+        slidesPerView = 2;
+    } else {
+        slidesPerView = 3;
+    }
+}
+
+// Get total number of slide groups
+function getTotalGroups() {
+    return Math.ceil(slides.length / slidesPerView);
+}
+
+// Create dots
+function createDots() {
+    sliderDots.innerHTML = '';
+    const totalGroups = getTotalGroups();
+
+    for (let i = 0; i < totalGroups; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('slider-dot');
+        if (i === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => goToSlide(i));
+        sliderDots.appendChild(dot);
+    }
+}
+
+// Update dots
+function updateDots() {
+    const dots = sliderDots.querySelectorAll('.slider-dot');
+    const currentGroup = Math.floor(currentSlide / slidesPerView);
+
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentGroup);
+    });
+}
+
+// Go to specific slide
+function goToSlide(groupIndex) {
+    currentSlide = groupIndex * slidesPerView;
+
+    // Make sure we don't go past the last slide
+    const maxSlide = slides.length - slidesPerView;
+    if (currentSlide > maxSlide) {
+        currentSlide = maxSlide;
+    }
+    if (currentSlide < 0) {
+        currentSlide = 0;
+    }
+
+    updateSlider();
+}
+
+// Update slider position
+function updateSlider() {
+    const slideWidth = 100 / slidesPerView;
+    const offset = currentSlide * slideWidth;
+    sliderTrack.style.transform = `translateX(-${offset}%)`;
+
+    // Update slide widths
+    slides.forEach(slide => {
+        slide.style.minWidth = `${slideWidth}%`;
+    });
+
+    updateDots();
+    updateArrows();
+}
+
+// Update arrow states
+function updateArrows() {
+    const maxSlide = slides.length - slidesPerView;
+    sliderPrev.disabled = currentSlide <= 0;
+    sliderNext.disabled = currentSlide >= maxSlide;
+}
+
+// Next slide
+function nextSlide() {
+    const maxSlide = slides.length - slidesPerView;
+    if (currentSlide < maxSlide) {
+        currentSlide += slidesPerView;
+        if (currentSlide > maxSlide) {
+            currentSlide = maxSlide;
+        }
+        updateSlider();
+    }
+}
+
+// Previous slide
+function prevSlide() {
+    if (currentSlide > 0) {
+        currentSlide -= slidesPerView;
+        if (currentSlide < 0) {
+            currentSlide = 0;
+        }
+        updateSlider();
+    }
+}
+
+// Auto slide
+function startAutoSlide() {
+    autoSlideInterval = setInterval(() => {
+        const maxSlide = slides.length - slidesPerView;
+        if (currentSlide >= maxSlide) {
+            currentSlide = 0;
+        } else {
+            currentSlide += slidesPerView;
+            if (currentSlide > maxSlide) {
+                currentSlide = maxSlide;
+            }
+        }
+        updateSlider();
+    }, 5000);
+}
+
+function stopAutoSlide() {
+    clearInterval(autoSlideInterval);
+}
+
+// Event listeners
+if (sliderPrev && sliderNext) {
+    sliderPrev.addEventListener('click', () => {
+        prevSlide();
+        stopAutoSlide();
+        startAutoSlide();
+    });
+
+    sliderNext.addEventListener('click', () => {
+        nextSlide();
+        stopAutoSlide();
+        startAutoSlide();
+    });
+}
+
+// Touch/Swipe support
+let touchStartX = 0;
+let touchEndX = 0;
+
+const projectsSlider = document.getElementById('projectsSlider');
+
+if (projectsSlider) {
+    projectsSlider.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        stopAutoSlide();
+    }, { passive: true });
+
+    projectsSlider.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+        startAutoSlide();
+    }, { passive: true });
+}
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+
+    if (diff > swipeThreshold) {
+        nextSlide();
+    } else if (diff < -swipeThreshold) {
+        prevSlide();
+    }
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+    const projectsSection = document.getElementById('projects');
+    const rect = projectsSection.getBoundingClientRect();
+    const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+
+    if (isInView) {
+        if (e.key === 'ArrowLeft') {
+            prevSlide();
+            stopAutoSlide();
+            startAutoSlide();
+        } else if (e.key === 'ArrowRight') {
+            nextSlide();
+            stopAutoSlide();
+            startAutoSlide();
+        }
+    }
+});
+
+// Resize handler
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        updateSlidesPerView();
+        createDots();
+        currentSlide = 0;
+        updateSlider();
+    }, 250);
+});
+
+// Initialize slider
+if (sliderTrack && slides.length > 0) {
+    updateSlidesPerView();
+    createDots();
+    updateSlider();
+    startAutoSlide();
+
+    // Pause on hover
+    projectsSlider.addEventListener('mouseenter', stopAutoSlide);
+    projectsSlider.addEventListener('mouseleave', startAutoSlide);
+}
+
