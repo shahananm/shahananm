@@ -45,7 +45,7 @@ let typingSpeed = 100;
 
 function typeEffect() {
     const currentWord = words[wordIndex];
-    
+
     if (isDeleting) {
         typingText.textContent = currentWord.substring(0, charIndex - 1);
         charIndex--;
@@ -55,7 +55,7 @@ function typeEffect() {
         charIndex++;
         typingSpeed = 100;
     }
-    
+
     if (!isDeleting && charIndex === currentWord.length) {
         isDeleting = true;
         typingSpeed = 2000; // Pause at end
@@ -64,7 +64,7 @@ function typeEffect() {
         wordIndex = (wordIndex + 1) % words.length;
         typingSpeed = 500; // Pause before next word
     }
-    
+
     setTimeout(typeEffect, typingSpeed);
 }
 
@@ -78,13 +78,13 @@ const faqItems = document.querySelectorAll('.faq-item');
 
 faqItems.forEach(item => {
     const question = item.querySelector('.faq-question');
-    
+
     question.addEventListener('click', () => {
         const isActive = item.classList.contains('active');
-        
+
         // Close all items
         faqItems.forEach(faq => faq.classList.remove('active'));
-        
+
         // Open clicked item if it wasn't active
         if (!isActive) {
             item.classList.add('active');
@@ -96,7 +96,7 @@ faqItems.forEach(item => {
 // Smooth Scroll for Navigation Links
 // ==========================================
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+    anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
@@ -130,7 +130,7 @@ function animateCounters() {
         const duration = 2000;
         const increment = target / (duration / 16);
         let current = 0;
-        
+
         const updateCounter = () => {
             current += increment;
             if (current < target) {
@@ -140,7 +140,7 @@ function animateCounters() {
                 stat.textContent = target;
             }
         };
-        
+
         updateCounter();
     });
 }
@@ -157,7 +157,7 @@ const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('animate-in');
-            
+
             // Start counter animation when about section is visible
             if (entry.target.id === 'about' && !countersStarted) {
                 countersStarted = true;
@@ -177,25 +177,25 @@ document.querySelectorAll('section').forEach(section => {
 // ==========================================
 const contactForm = document.getElementById('contact-form');
 
-contactForm.addEventListener('submit', function(e) {
+contactForm.addEventListener('submit', function (e) {
     e.preventDefault();
-    
+
     // Get form data
     const formData = new FormData(this);
     const data = Object.fromEntries(formData);
-    
+
     // Simple validation
     if (!data.firstName || !data.email || !data.message) {
         showNotification('Please fill in all required fields', 'error');
         return;
     }
-    
+
     // Simulate form submission
     const submitBtn = this.querySelector('.btn-submit');
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
     submitBtn.disabled = true;
-    
+
     setTimeout(() => {
         showNotification('Thank you! Your message has been sent successfully.', 'success');
         contactForm.reset();
@@ -211,7 +211,7 @@ function showNotification(message, type) {
     // Remove existing notification
     const existing = document.querySelector('.notification');
     if (existing) existing.remove();
-    
+
     // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
@@ -219,7 +219,7 @@ function showNotification(message, type) {
         <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
         <span>${message}</span>
     `;
-    
+
     // Add styles
     notification.style.cssText = `
         position: fixed;
@@ -237,9 +237,9 @@ function showNotification(message, type) {
         z-index: 10000;
         animation: slideIn 0.4s ease forwards;
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     // Remove after 4 seconds
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.4s ease forwards';
@@ -297,16 +297,16 @@ const sections = document.querySelectorAll('section[id]');
 
 window.addEventListener('scroll', () => {
     let current = '';
-    
+
     sections.forEach(section => {
         const sectionTop = section.offsetTop;
         const sectionHeight = section.clientHeight;
-        
+
         if (scrollY >= sectionTop - 200) {
             current = section.getAttribute('id');
         }
     });
-    
+
     navLinks.forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('href') === `#${current}`) {
@@ -333,11 +333,11 @@ window.addEventListener('scroll', () => {
 const serviceCards = document.querySelectorAll('.service-card');
 
 serviceCards.forEach(card => {
-    card.addEventListener('mouseenter', function() {
+    card.addEventListener('mouseenter', function () {
         this.style.setProperty('--hover', '1');
     });
-    
-    card.addEventListener('mouseleave', function() {
+
+    card.addEventListener('mouseleave', function () {
         this.style.setProperty('--hover', '0');
     });
 });
@@ -347,7 +347,7 @@ serviceCards.forEach(card => {
 // ==========================================
 window.addEventListener('load', () => {
     document.body.style.overflow = 'hidden';
-    
+
     setTimeout(() => {
         document.body.style.overflow = '';
     }, 500);
