@@ -849,3 +849,55 @@ if (testimonialTrack && testimonialSlides.length > 0) {
 }
 
 console.log('💬 Testimonial slider initialized!');
+
+// ==========================================
+// Project Fan Cards - Lightbox
+// ==========================================
+const fanCards = document.querySelectorAll('.fan-card');
+const lightbox = document.getElementById('projectLightbox');
+const lightboxImage = document.getElementById('lightboxImage');
+const lightboxClose = document.getElementById('lightboxClose');
+
+// Open lightbox when clicking on fan card
+if (fanCards.length > 0 && lightbox) {
+    fanCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const img = card.querySelector('img');
+            if (img) {
+                lightboxImage.src = img.src;
+                lightboxImage.alt = img.alt;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
+
+    // Close lightbox
+    if (lightboxClose) {
+        lightboxClose.addEventListener('click', closeLightbox);
+    }
+
+    // Close on clicking outside the image
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+            closeLightbox();
+        }
+    });
+}
+
+function closeLightbox() {
+    if (lightbox) {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+console.log('🎨 Fan card lightbox initialized!');
+
